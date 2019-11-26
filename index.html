@@ -19,21 +19,129 @@
     <![endif]-->
   </head>
   <body>
-    <section>
+    <section id="main">
     	<div class="container">
-    		<div class="row">
-    			<div class="col-sm-6"></div>
-    			<div class="calc">
-    				<h2>Рассчет стоимости</h2>
-    				
-    			</div>
-    			<div class="col-sm-6"></div>
+    		<div class="header text-center">
+    			<h3>&darr;Калькулятор рассчета стоимости заказаных визиток&darr;</h3>
     		</div>
+    		<div class="row">
+    			<div class="col-sm-4">
+    				<div class="calc">
+    					<h2>Рассчет стоимости</h2>
+	    				<label for="card-edition">Выберите тираж</label> <br />
+		    				<select class="form-control" 
+		    				name="edition" id="card-edition">
+		    					<option value="100">100</option>
+		    					<option value="150">150</option>
+		    					<option value="200">200</option>
+		    					<option value="250">250</option>
+		    					<option value="300">300</option>
+		    					<option value="350">350</option>
+		    					<option value="400">400</option>
+		    					<option value="450">450</option>
+		    					<option value="500">500</option>
+		    					<option value="600">600</option>
+		    					<option value="700">700</option>
+		    					<option value="800">800</option>
+		    					<option value="900">900</option>
+		    					<option value="1000">1000</option>
+		    					<option value="1500">1500</option>
+		    					<option value="2000">2000</option>
+		    				</select>
+		    				<br />
+		    			<label for="card-papper">Выберите тип бумаги для печати</label>
+		    				<select class="form-control" name="card-papper" id="card-papper">
+		    					<option data-price-koff= "10.5" value="Мелованная бумага">Мелованная бумага</option>
+		    					<option data-price-koff= "25" value="Бумага с эффектом touch cover">Бумага с эффектом touch cover</option>
+		    					<option data-price-koff= "32.5" value="Бумага Плайк Plike">Бумага Плайк Plike</option>
+		    				</select>
+		    				<br />
+		    			<label for="card-color">Выберите цветность для печати</label>
+		    				<select name="card-color" id="card-color" class="form-control">
+		    					<option data-price-ottisk="10" data-price-file="150" data-color="1" value="Одностороннее черно-белое">Одностороннее черно-белое</option>
+		    					<option data-price-ottisk="15" data-price-file="200" data-color="2" value="Двусторонняя черно-белая">Двусторонняя черно-белая</option>
+		    					<option data-price-ottisk="22" data-price-file="150" data-color="3" value="Односторонняя цветная">Односторонняя цветная</option>
+		    					<option data-price-ottisk="32" data-price-file="200" data-color="4" value="Цветная + черно-белая с оборота">Цветная + черно-белая с оборота</option>
+		    					<option data-price-ottisk="50" data-price-file="200" data-color="5" value="Двусторонняя цветная">Двусторонняя цветная</option>
+		    				</select>
+		    				<br />
+		    				<small>Приблизительная</small>
+		    				<h4>Стоимость за тираж</h4>
+		    				<p id="price">
+		    					<span id="card-price">0 </span>
+		    					Грн.
+		    				</p>
+    				</div>
+    			</div>
+    			<div class="col-sm-8">
+    				<div class="card-images text-center">
+    					<img src="img/1_0.png" alt="" id="card_1_0">
+    					<img src="img/1_1.png" alt="" id="card_1_1">
+    					<img src="img/2_0.png" alt="" id="card_2_0">
+    					<img src="img/2_1.png" alt="" id="card_2_1">
+    					<img src="img/4_2.png" alt="" id="card_4_2">
+    				</div>
+    			</div>
+  		</div>
     	</div>
     </section>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+
+    <script>
+    	$(document).ready(function(){
+    		$('.calc select').change(function(){
+    			$edition = $('select#card-edition').val();
+    			$papper = $('select#card-papper').val();
+    			$color = $('select#card-color').val();
+
+
+
+    			// выбор визитки().
+    			$img_format = $('select#card-color option:selected').attr('data-color');
+    			// 
+    			$sort_divis = 30;
+    			$col_edition = $edition / $sort_divis;
+    			// Выбор коэф. в зависимости от типа бумаги.
+    			$price_koff = $('select#card-papper option:selected').attr('data-price-koff');
+    			// Выбор цветности визитки + коэф.
+    			$price_file = $('select#card-color option:selected').attr('data-price-file');
+    			// Выбор цены оттиска печати
+    			$price_ottisk = $('select#card-color option:selected').attr('data-price-ottisk');
+
+    			$price = $col_edition * $price_koff + parseInt($price_file) + $col_edition * $price_ottisk;
+    			// добавляем parseInt для считывания не как строки
+
+    			$sum_price = $price.toFixed(1);
+    			// Выводим окончательную цену 
+    			$('span#card-price').text($sum_price);
+
+    			// Скрываем не нужные картинки
+    			if ($img_format == 1) {
+    				$('.card-images img').hide();
+    				$('#card_1_0').show('slow');
+    			}
+    			if ($img_format == 2) {
+    				$('.card-images img').hide();
+    				$('#card_1_1').show('slow');
+    			}
+    			if ($img_format == 3) {
+    				$('.card-images img').hide();
+    				$('#card_2_0').show('slow');
+    			}
+    			if ($img_format == 4) {
+    				$('.card-images img').hide();
+    				$('#card_2_1').show('slow');
+    			}
+    			if ($img_format == 5) {
+    				$('.card-images img').hide();
+    				$('#card_4_2').show('slow');
+    			}
+
+    		});
+    	});
+    </script>
   </body>
 </html>
